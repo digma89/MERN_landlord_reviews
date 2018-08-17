@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { Collapse, Button, CardBody, Card, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 class AddToggle extends Component {
-
+    
     toggle = this.toggle.bind(this);
-    state = { collapse: false };
+    state = { 
+        collapse: false, 
+        province: '1'};
+
     constants = {
         addButton: "Add review",
         address1: "Address 1",
@@ -65,14 +68,17 @@ class AddToggle extends Component {
     province: [      
        "AB","BC","MB","NB","NL","NT","NS","NU","ON","PE","QC", "SK","YT"
     ],
-    pcode: "Postal Code",
-    comment: "Comment"
+    pCode: "Postal Code",
+    comment: "How's your landlord doing?"
     } ; 
     
-    state = {
-        value: '1'
-    };
     
+    onChangeAddress1 = (e)=>{this.setState({[e.target.name]: e.target.value})};
+    onChangeAddress2 = (e)=>{this.setState({[e.target.name]: e.target.value})};
+    onChangeProvince = (e)=>{this.setState({[e.target.name]: e.target.value})};
+    onChangePCode = (e)=>{this.setState({[e.target.name]: e.target.value})};
+    onChangeComment = (e)=>{this.setState({[e.target.name]: e.target.value})};
+
     addProvinces = (i) => {
         return (<option key={i} value={i}>{i}</option>);
      }
@@ -81,6 +87,23 @@ class AddToggle extends Component {
     this.setState({ collapse: !this.state.collapse });
   }
 
+  addReview = (e) => {
+    e.preventDefault();
+    console.log(this);
+    
+  } 
+
+  
+
+ checkPostal = (postal) => {
+    const regex = new RegExp (/^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVWXYZ]( )?\d[ABCEGHJKLMNPRSTVWXYZ]\d$/i);
+    if (regex.test(postal.value))
+        return true;
+    else return false;
+}
+
+
+
   render() {
     return (
       <div>
@@ -88,29 +111,24 @@ class AddToggle extends Component {
         <Collapse isOpen={this.state.collapse}>
           <Card>
             <CardBody>
-                <Form>
+                <Form onSubmit={this.addReview.bind(this)}>
                     <FormGroup>
-                    <Label for="text"></Label>
-                    <Input type="text" name="inputAddress1" id="inputAddress1" placeholder={this.constants.address1} />
+                        <Input type="text" name="address1" id="inputAddress1" placeholder={this.constants.address1} onChange={this.onChangeAddress1} required/>
+                    </FormGroup>
+                    <FormGroup>            
+                        <Input type="text" name="address2" id="inputAddress2" placeholder={this.constants.address2} onChange={this.onChangeAddress2} />
                     </FormGroup>
                     <FormGroup>
-                    <Label for="text"></Label>
-                    <Input type="text" name="inputAddress2" id="inputAddress2" placeholder={this.constants.address2} />
+                        <Input type="select" name="province" id="selectPcode" value={this.state.province} onChange={this.onChangeProvince} required>
+                            <option value='1' disabled>Select your province</option>
+                            {this.constants.province.map (this.addProvinces)}
+                        </Input>
                     </FormGroup>
-                    <FormGroup>
-                    <Label for="select"></Label>
-                    <Input type="select" name="selectPcode" id="selectPcode" value={this.state.value} onChange={(e)=>{this.setState({value: e.target.value})}}>
-                    <option value='1' disabled>Select your province</option>
-                        {this.constants.province.map (this.addProvinces)}
-                    </Input>
-                    </FormGroup>              
-                    <FormGroup>
-                    <Label for="text"></Label>
-                    <Input type="text" name="inputPcode" id="inputPcode" placeholder={this.constants.pcode} />
+                    <FormGroup>                    
+                        <Input type="text" name="pCode" id="inputPcode" placeholder={this.constants.pCode} onChange={this.onChangePCode} required/>
                     </FormGroup> 
                     <FormGroup>
-                    <Label for="exampleText">Text Area</Label>
-                    <Input type="textarea" name="text" id="exampleText" />
+                        <Input type="textarea" name="comment" id="exampleText" placeholder={this.constants.comment} onChange={this.onChangeComment} required/>
                     </FormGroup>                    
                     <Button>Submit</Button>
                 </Form>
