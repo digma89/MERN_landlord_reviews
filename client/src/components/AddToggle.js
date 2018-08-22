@@ -66,7 +66,7 @@ class AddToggle extends Component {
 
   render() {
     return (
-      <div className="bootstrap-overrides">
+      <div>
         <Button color="primary" onClick={this.toggle} style={{ marginBottom: '1rem' }}>{this.constants.addButton}</Button>
         <Collapse isOpen={this.state.collapse}>
           <Card>
