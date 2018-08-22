@@ -1,82 +1,42 @@
 import React, { Component } from 'react';
-import { Collapse, Button, CardBody, Card, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Collapse, Button, CardBody, Card, Form, FormGroup, Input} from 'reactstrap';
+
 
 class AddToggle extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            collapse: false, 
+            province: '1',
+            formIsValid: false,
+            inputClass: ""
+        }
+
+
+    }
     
     toggle = this.toggle.bind(this);
-    state = { 
-        collapse: false, 
-        province: '1'};
-
+  
     constants = {
         addButton: "Add review",
         address1: "Address 1",
-        address2: "Address 2",
-        province1: [{
-            "name": "Alberta",
-            "abbreviation": "AB"
-        },
-        {
-            "name": "British Columbia",
-            "abbreviation": "BC"
-        },
-        {
-            "name": "Manitoba",
-            "abbreviation": "MB"
-        },
-        {
-            "name": "New Brunswick",
-            "abbreviation": "NB"
-        },
-        {
-            "name": "Newfoundland and Labrador",
-            "abbreviation": "NL"
-        },
-        {
-            "name": "Northwest Territories",
-            "abbreviation": "NT"
-        },
-        {
-            "name": "Nova Scotia",
-            "abbreviation": "NS"
-        },
-        {
-            "name": "Nunavut",
-            "abbreviation": "NU"
-        },
-        {
-            "name": "Ontario",
-            "abbreviation": "ON"
-        },
-        {
-            "name": "Prince Edward Island",
-            "abbreviation": "PE"
-        },
-        {
-            "name": "Quebec",
-            "abbreviation": "QC"
-        },
-        {
-            "name": "Saskatchewan",
-            "abbreviation": "SK"
-        },
-        {
-            "name": "Yukon Territory",
-            "abbreviation": "YT"
-        }
-    ],
-    province: [      
-       "AB","BC","MB","NB","NL","NT","NS","NU","ON","PE","QC", "SK","YT"
-    ],
-    pCode: "Postal Code",
-    comment: "How's your landlord doing?"
+        address2: "Address 2",  
+        province: [      
+        "AB","BC","MB","NB","NL","NT","NS","NU","ON","PE","QC", "SK","YT"
+        ],
+        pCode: "Postal Code",
+        comment: "How's your landlord doing?"
     } ; 
     
     
     onChangeAddress1 = (e)=>{this.setState({[e.target.name]: e.target.value})};
     onChangeAddress2 = (e)=>{this.setState({[e.target.name]: e.target.value})};
     onChangeProvince = (e)=>{this.setState({[e.target.name]: e.target.value})};
-    onChangePCode = (e)=>{this.setState({[e.target.name]: e.target.value})};
+    onChangePCode = (e)=>{
+        this.setState({[e.target.name]: e.target.value})
+        this.checkPostal(e.target.value)
+    };
     onChangeComment = (e)=>{this.setState({[e.target.name]: e.target.value})};
 
     addProvinces = (i) => {
@@ -91,22 +51,22 @@ class AddToggle extends Component {
     e.preventDefault();
     console.log(this);
     
-  } 
+  }   
 
-  
-
- checkPostal = (postal) => {
-    const regex = new RegExp (/^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVWXYZ]( )?\d[ABCEGHJKLMNPRSTVWXYZ]\d$/i);
-    if (regex.test(postal.value))
-        return true;
-    else return false;
+ checkPostal = (postal) => {     
+    const regex = new RegExp (/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/);
+    if (regex.test(postal)){
+        this.setState({formIsValid: true})        
+        this.setState({inputClass:""})
+    }else{        
+        this.setState({inputClass:"is-invalid"})
+        this.setState({formIsValid: false})
+    }        
 }
-
-
 
   render() {
     return (
-      <div>
+      <div className="bootstrap-overrides">
         <Button color="primary" onClick={this.toggle} style={{ marginBottom: '1rem' }}>{this.constants.addButton}</Button>
         <Collapse isOpen={this.state.collapse}>
           <Card>
@@ -125,12 +85,12 @@ class AddToggle extends Component {
                         </Input>
                     </FormGroup>
                     <FormGroup>                    
-                        <Input type="text" name="pCode" id="inputPcode" placeholder={this.constants.pCode} onChange={this.onChangePCode} required/>
+                        <Input type="text" name="pCode" id="inputPcode" className={this.state.inputClass} placeholder={this.constants.pCode} onChange={this.onChangePCode} required/>
                     </FormGroup> 
                     <FormGroup>
                         <Input type="textarea" name="comment" id="exampleText" placeholder={this.constants.comment} onChange={this.onChangeComment} required/>
                     </FormGroup>                    
-                    <Button>Submit</Button>
+                    <Button disabled={!this.state.formIsValid}>Submit</Button>
                 </Form>
             </CardBody>
           </Card>
