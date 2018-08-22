@@ -49,6 +49,7 @@ class AddToggle extends Component {
 
   addReview = (e) => {
     e.preventDefault();
+    this.toggle();
     console.log(this);
     
   }   
