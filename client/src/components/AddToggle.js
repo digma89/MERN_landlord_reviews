@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Collapse, Button, CardBody, Card, Form, FormGroup, Input} from 'reactstrap';
-
+import {connect} from 'react-redux';
+import {addComment} from '../actions/commentAcctions';
+import PropTypes from 'prop-types';
 
 class AddToggle extends Component {
-
+ 
     constructor(props){
         super(props);
         this.state = {
@@ -50,7 +52,17 @@ class AddToggle extends Component {
   addReview = (e) => {
     e.preventDefault();
     this.toggle();
-    console.log(this);
+
+    const newReview = {
+        address1: this.state.address1,
+        address2: this.state.address2,
+        province: this.state.province,
+        pCode: this.state.pCode,
+        comment: this.state.comment
+    }
+    //send to redux store
+    console.log(newReview);
+    this.props.addComment(newReview);
     
   }   
 
@@ -101,4 +113,12 @@ class AddToggle extends Component {
   }
 }
 
-export default AddToggle;
+AddToggle.propTypes = {
+    comment: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+    comment: state.comment    
+});
+
+export default connect(mapStateToProps, { addComment})(AddToggle);

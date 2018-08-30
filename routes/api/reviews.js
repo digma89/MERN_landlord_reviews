@@ -16,12 +16,12 @@ router.get('/', (req,res) => {
 //@route POST api/reviews
 //@desc Create a review
 //@access Public
-router.post('/', (req,res) => {
+router.post('/', (req,res) => {console.log("req:"+req.body.comment); console.log("res:"+res);
     const newReview = new Review({
         address1: req.body.address1,
         address2: req.body.address2,
         province: req.body.province,
-        pcode: req.body.pcode.toUpperCase(),
+        pcode: req.body.pCode.toUpperCase(),
         comment: req.body.comment
     });
     newReview.save().then(review => res.json(review));
